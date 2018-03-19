@@ -1,32 +1,25 @@
-var express = require("express");
-var bodyParser = require("body-parser");
-var db = require("./models");
-var PORT = process.env.PORT || 3000;
+const express = require("express");
+const bodyParser = require("body-parser");
+const db = require("./models");
 
-var app = express();
+const port = process.env.PORT || 8080;
 
-// Serve static content for the app from the "public" directory in the application directory.
+const app = express();
 app.use(express.static(__dirname + "/public"));
 
-// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
-
-// parse application/json
 app.use(bodyParser.json());
 
-// Set Handlebars.
-var exphbs = require("express-handlebars");
+const exphbs = require("express-handlebars");
 
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-// Import routes and give the server access to them.
-var routes = require("./controllers/burgers_controller.js");
-
+const routes = require("./controllers/burgers_controller.js");
 app.use("/", routes);
 
 db.sequelize.sync().then(() => {
-	app.listen(PORT, function() {
-		console.log("Server listening on Port:" + PORT);
+	app.listen(port, () => {
+		console.log("Server listening on Port:" + port);
 	});
 });
